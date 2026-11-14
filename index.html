@@ -1,0 +1,169 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Avena Smart Weighing POS</title>
+<style>
+:root{--navy:#0f2a43;--cy:#14b8c8;--bg:#f2f5f9;--card:#fff;--tx:#17202b;--mut:#6b7785;--ok:#16a34a;--warn:#e69500;--bad:#d64545;--bd:#e3e8ef}
+*{box-sizing:border-box}body{margin:0;font:15px/1.4 "Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--tx)}
+header{background:var(--navy);color:#fff;display:flex;align-items:center;gap:18px;padding:0 18px;height:56px;position:sticky;top:0;z-index:5}
+.brand{font-weight:800;font-size:18px}.brand b{color:var(--cy)}
+nav{display:flex;gap:4px;flex:1}nav button{background:none;border:0;color:#b9c8d8;padding:8px 14px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
+nav button.on,nav button:hover{background:#1c4066;color:#fff}
+.pill{background:#1c4066;padding:4px 12px;border-radius:99px;font-size:13px}
+main{padding:16px;max-width:1400px;margin:auto}section[hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px}
+.sell{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}@media(max-width:900px){.sell{grid-template-columns:1fr}}
+.wcard{background:var(--navy);border-radius:16px;padding:14px 20px;color:#fff;text-align:center;border-bottom:8px solid var(--bad)}
+.wcard.ok{border-color:var(--ok)}.wcard.warn{border-color:var(--warn)}
+#w{font:700 84px/1 Consolas,"Cascadia Mono",monospace;color:var(--cy);letter-spacing:2px}.u{font-size:28px;color:#8fb3d1;margin-left:8px}
+#wstat{font-weight:700;letter-spacing:2px;font-size:13px;margin-top:4px}
+.wcard.ok #wstat{color:#5eead4}.wcard.warn #wstat{color:#fbbf24}.wcard.bad #wstat{color:#fca5a5}
+.bar{display:flex;gap:8px;align-items:center;margin:10px 0;flex-wrap:wrap}.bar .sp{flex:1}
+.demo{background:#fff8e6;border:1px dashed #e6b34d;border-radius:10px;padding:8px 12px}.demo button{margin:2px}
+button,.btn{font:inherit;font-weight:600;border:1px solid var(--bd);background:#fff;border-radius:9px;padding:8px 14px;cursor:pointer;color:var(--tx);text-decoration:none;display:inline-block}
+button:hover{border-color:var(--cy)}button.pri{background:var(--cy);border-color:var(--cy);color:#04262b}button.dng{color:var(--bad)}button.on{background:#fff2cc;border-color:#e6b34d}
+input,select{font:inherit;padding:8px 10px;border:1px solid var(--bd);border-radius:9px;background:#fff;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tile{position:relative;text-align:left;padding:14px;border-radius:12px;background:#fff;border:1px solid var(--bd);min-height:84px}
+.tile b{display:block;font-size:16px}.tile span{color:var(--mut);font-size:13px}.tile i{position:absolute;top:8px;right:10px;font-style:normal;font-size:12px;background:#e8f7f9;color:#0b7a86;border-radius:6px;padding:0 6px}
+.tile:active{transform:scale(.97)}
+table{width:100%;border-collapse:collapse}th{text-align:left;font-size:12px;text-transform:uppercase;color:var(--mut);padding:6px}td{padding:8px 6px;border-top:1px solid var(--bd)}td.r,th.r{text-align:right}
+.total{font-size:30px;font-weight:800;text-align:right;margin:10px 0}.mut{color:var(--mut)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}.stat{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px}.stat b{display:block;font-size:22px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#1f2937;color:#fff;padding:10px 18px;border-radius:99px;opacity:0;transition:.25s;pointer-events:none;z-index:20}.toast.show{opacity:1}
+dialog{border:0;border-radius:16px;padding:20px;min-width:340px;max-width:92vw;box-shadow:0 20px 60px #0006}dialog::backdrop{background:#0008}
+dialog h2{margin:0 0 10px}dialog label{display:block;margin:8px 0 2px;font-size:13px;color:var(--mut)}dialog input{width:100%}
+menu{display:flex;gap:8px;justify-content:flex-end;padding:0;margin:14px 0 0}
+.seg{display:flex;gap:4px;margin:8px 0}.seg button{flex:1;padding:8px 4px}.seg button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+pre{font:13px/1.3 Consolas,monospace;background:#f8fafc;border:1px solid var(--bd);padding:12px;border-radius:10px;overflow:auto;margin:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:900px){.two{grid-template-columns:1fr}}
+.row{display:flex;gap:8px;margin:6px 0;align-items:center;flex-wrap:wrap}.row label{width:130px;color:var(--mut);font-size:13px}.row input,.row select{flex:1}
+</style></head><body>
+<header><div class="brand">Avena <b>Smart POS</b></div>
+<nav id="nav"><button data-t="sell" class="on">Sell</button><button data-t="products">Products</button><button data-t="stock">Stock</button><button data-t="reports">Reports</button><button data-t="scale">Scale &amp; Settings</button></nav>
+<span class="pill" id="pill">…</span></header>
+<main>
+<section id="sell" class="sell">
+ <div>
+  <div class="wcard bad" id="wcard"><div><span id="w">0.000</span><span class="u">kg</span></div><div id="wstat">CONNECTING…</div></div>
+  <div class="demo bar" id="demoBar" hidden><b>Demo scale:</b> <span id="demoBtns"></span><button onclick="sim(0)">Remove item</button></div>
+  <div class="bar"><input id="plu" placeholder="PLU code + Enter" style="width:150px"><button id="manBtn" onclick="toggleManual()">✎ Type weight</button><span class="sp"></span><span class="mut">Tap an item to bill the weight on the scale</span></div>
+  <div class="grid" id="grid"></div>
+ </div>
+ <div class="card"><h3 style="margin:0 0 6px">Current bill</h3>
+  <table><thead><tr><th>Item</th><th class="r">Qty</th><th class="r">Price</th><th class="r">Total</th><th></th></tr></thead><tbody id="cart"></tbody></table>
+  <div class="total" id="tot">KES 0.00</div>
+  <div class="bar"><button onclick="cart=[];renderCart()">Clear</button><span class="sp"></span><button class="pri" style="font-size:18px;padding:12px 28px" onclick="openPay()">Pay (F12)</button></div>
+ </div>
+</section>
+<section id="products" hidden><div class="two"><div class="card"><table><thead><tr><th>PLU</th><th>Name</th><th>Type</th><th class="r">Price</th></tr></thead><tbody id="ptb"></tbody></table></div>
+ <div class="card"><h3 style="margin-top:0" id="pTitle">Add product</h3>
+  <div class="row"><label>PLU code</label><input id="pPlu"></div><div class="row"><label>Name</label><input id="pName"></div>
+  <div class="row"><label>Sold by</label><select id="pType"><option value="kg">Weight (per kg)</option><option value="fixed">Fixed price (each)</option></select></div>
+  <div class="row"><label>Price (KES)</label><input id="pPrice" type="number" step="any"></div>
+  <div class="bar"><button class="pri" onclick="saveProd()">Save</button><button onclick="editProd(null)">New</button><button class="dng" onclick="delProd()">Delete</button></div></div></div></section>
+<section id="stock" hidden><div class="card"><div class="bar"><b>Stock day</b><input type="date" id="sDay"><button onclick="loadStock()">Load</button><span class="mut">Opening + received − sold = expected closing (kg)</span></div>
+ <table><thead><tr><th>Product</th><th>Opening kg</th><th>Received kg</th><th class="r">Sold kg</th><th class="r">Expected closing</th><th></th></tr></thead><tbody id="stb"></tbody></table></div></section>
+<section id="reports" hidden><div class="card bar"><b>From</b><input type="date" id="rFrom"><b>To</b><input type="date" id="rTo"><button class="pri" onclick="loadReport()">Run</button><a class="btn" id="csv" href="#">Export CSV (Excel)</a></div>
+ <div class="stats" id="stats"></div><div class="two"><div class="card"><h3 style="margin-top:0">Sales by product</h3><table id="rprod"></table><h3>By attendant</h3><table id="ratt"></table></div>
+ <div class="card"><h3 style="margin-top:0">Sales</h3><table id="rsales"></table></div></div></section>
+<section id="scale" hidden><div class="two"><div>
+ <div class="card"><h3 style="margin-top:0">Scale connection (RS-232)</h3>
+  <div class="row"><label>COM port</label><select id="cPort"></select></div>
+  <div class="row"><label>Baud rate</label><select id="cBaud"><option>1200</option><option>2400</option><option>4800</option><option selected>9600</option><option>19200</option></select></div>
+  <div class="row"><label>Scale format</label><select id="cProf"></select></div>
+  <div class="row"><label>Capture mode</label><select id="cMode"><option value="continuous">Continuous (auto stable-lock)</option><option value="button">Button (scale PRINT key)</option></select></div>
+  <div class="row"><label>Custom regex</label><input id="cRx" placeholder="(?P&lt;w&gt;\d+\.\d+)"></div>
+  <div class="bar"><button class="pri" onclick="connect()">Save &amp; connect</button><button onclick="api('/api/scale/demo',{}).then(()=>toast('Demo scale on'))">Use demo scale</button><button onclick="loadScale()">Refresh ports</button></div></div>
+ <div class="card"><h3 style="margin-top:0">Live data from scale</h3><pre id="raw" style="height:210px"></pre></div></div>
+ <div class="card"><h3 style="margin-top:0">Shop &amp; receipt</h3>
+  <div class="row"><label>Shop name</label><input id="sName"></div><div class="row"><label>Address / phone</label><input id="sAddr"></div>
+  <div class="row"><label>Windows printer</label><input id="sPrn" placeholder="exact printer name"></div>
+  <div class="row"><label>Paper width</label><select id="sWid"><option value="32">58 mm</option><option value="48">80 mm</option></select></div>
+  <div class="row"><label>Auto-print receipt</label><select id="sAuto"><option value="0">No</option><option value="1">Yes</option></select></div>
+  <div class="bar"><button class="pri" onclick="saveSettings()">Save</button></div></div></div></section>
+</main>
+<dialog id="askD"><form method="dialog"><h2 id="askT"></h2><label id="askL"></label><input id="askI" type="number" step="any" inputmode="decimal"><menu><button value="cancel">Cancel</button><button value="ok" class="pri">OK</button></menu></form></dialog>
+<dialog id="payD"><form method="dialog"><h2>Total <span id="payTot"></span></h2>
+ <div class="seg" id="payM"><button type="button" data-m="cash" class="on">Cash</button><button type="button" data-m="mpesa">M-Pesa</button><button type="button" data-m="split">Split</button><button type="button" data-m="credit">Credit</button></div>
+ <div id="fCash"><label>Cash given</label><input id="pCash" type="number" step="any"><div class="bar" id="quick"></div></div>
+ <div id="fMpA"><label>M-Pesa amount</label><input id="pMpA" type="number" step="any"></div>
+ <div id="fRef"><label>M-Pesa reference</label><input id="pRef" placeholder="e.g. SFK3X9Q2LM"></div>
+ <div id="fCust"><label>Customer name</label><input id="pCust"></div>
+ <p id="payInfo" style="font-weight:700;min-height:22px"></p><menu><button value="cancel">Cancel</button><button type="button" class="pri" onclick="confirmPay()">Confirm payment</button></menu></form></dialog>
+<dialog id="rcpD"><h2 id="rcpH">Receipt</h2><pre id="rcpT"></pre><menu><button onclick="rcpPrint()">Print (thermal)</button><button onclick="browserPrint($('#rcpT').textContent)">Print (browser)</button><button class="pri" onclick="$('#rcpD').close()">Done</button></menu></dialog>
+<div class="toast" id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const api=async(u,b)=>{const r=await fetch(u,b===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});return r.json()};
+const money=n=>Number(n||0).toLocaleString('en-KE',{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const today=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+let products=[],cart=[],manual=false,payM='cash',editId=null,lastSale=null,tabNow='sell';
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),2600)}
+function ask(title,label,val){return new Promise(res=>{$('#askT').textContent=title;$('#askL').textContent=label;const d=$('#askD'),i=$('#askI');i.value=val;d.onclose=()=>res(d.returnValue==='ok'?i.value:null);d.showModal();i.select()})}
+$('#nav').onclick=e=>{const t=e.target.dataset.t;if(!t)return;tabNow=t;$$('#nav button').forEach(b=>b.classList.toggle('on',b===e.target));$$('main>section').forEach(s=>s.hidden=s.id!==t);
+ ({sell:loadProducts,products:loadProducts,stock:loadStock,reports:loadReport,scale:loadScale})[t]()};
+// ---- live scale ----
+async function poll(){try{const s=await api('/api/scale');$('#w').textContent=s.weight.toFixed(3);
+ const m={stable:['ok','STABLE – READY'],unstable:['warn','SETTLING…'],no_data:['bad','NO DATA FROM SCALE'],disconnected:['bad','SCALE DISCONNECTED – CHECK CABLE']}[s.status];
+ $('#wcard').className='wcard '+m[0];$('#wstat').textContent=m[1];$('#pill').textContent=s.demo?'● Demo scale':'● '+(s.port||'Scale');$('#demoBar').hidden=!s.demo||tabNow!=='sell';
+ if(tabNow==='scale')$('#raw').textContent=s.raw.join('\n')||'(waiting for data…)'}catch(e){$('#wstat').textContent='APP OFFLINE';$('#wcard').className='wcard bad'}setTimeout(poll,150)}
+const sim=w=>api('/api/scale/sim',{weight:w});
+$('#demoBtns').innerHTML=[0.5,1.45,2.3,5].map(w=>`<button onclick="sim(${w})">${w} kg</button>`).join('');
+// ---- sell ----
+async function loadProducts(){products=await api('/api/products');$('#grid').innerHTML=products.map(p=>`<button class="tile" data-id="${p.id}"><i>${esc(p.plu)}</i><b>${esc(p.name)}</b><span>KES ${money(p.price)}${p.unit_type=='kg'?' / kg':' each'}</span></button>`).join('')||'<p class="mut">No products yet – add some under Products.</p>';
+ $('#ptb').innerHTML=products.map(p=>`<tr style="cursor:pointer" onclick="editProd(${p.id})"><td>${esc(p.plu)}</td><td>${esc(p.name)}</td><td>${p.unit_type=='kg'?'per kg':'each'}</td><td class="r">${money(p.price)}</td></tr>`).join('')}
+$('#grid').onclick=e=>{const t=e.target.closest('.tile');if(t)addProduct(products.find(p=>p.id==t.dataset.id))};
+$('#plu').onkeydown=e=>{if(e.key==='Enter'){const p=products.find(p=>p.plu===e.target.value.trim());e.target.value='';p?addProduct(p):toast('No product with that PLU')}};
+document.onkeydown=e=>{if(e.key==='F12'){e.preventDefault();openPay()}};
+function toggleManual(){manual=!manual;$('#manBtn').classList.toggle('on',manual);if(manual)toast('Next weighed item: you will type the weight')}
+async function addProduct(p){let qty,man=0;
+ if(p.unit_type=='kg'){if(manual){qty=parseFloat(await ask('Type weight',p.name+' – kg',''));manual=false;$('#manBtn').classList.remove('on');if(!(qty>0))return;man=1}
+  else{qty=(await api('/api/take',{})).weight;if(!qty)return toast('Waiting for a stable weight on the scale…')}}
+ else{qty=parseInt(await ask('Quantity',p.name,'1'));if(!(qty>0))return}
+ cart.push({product_id:p.id,name:p.name,unit_type:p.unit_type,qty,unit_price:p.price,manual:man});renderCart()}
+const lineT=i=>Math.round(i.qty*i.unit_price*100)/100,total=()=>Math.round(cart.reduce((a,i)=>a+lineT(i),0)*100)/100;
+function renderCart(){$('#cart').innerHTML=cart.map((i,n)=>`<tr><td>${esc(i.name)}${i.manual?' ✎':''}</td><td class="r">${i.unit_type=='kg'?i.qty.toFixed(3)+' kg':i.qty}</td><td class="r">${money(i.unit_price)}</td><td class="r">${money(lineT(i))}</td><td><button class="dng" style="padding:2px 8px" onclick="cart.splice(${n},1);renderCart()">✕</button></td></tr>`).join('')||'<tr><td colspan=5 class="mut">Empty – weigh an item and tap it</td></tr>';$('#tot').textContent='KES '+money(total())}
+// ---- pay ----
+const SHOW={cash:['fCash'],mpesa:['fRef'],split:['fCash','fMpA','fRef'],credit:['fCust']};
+function setM(m){payM=m;$$('#payM button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));['fCash','fMpA','fRef','fCust'].forEach(f=>$('#'+f).hidden=!SHOW[m].includes(f));payInfo()}
+$('#payM').onclick=e=>{if(e.target.dataset.m)setM(e.target.dataset.m)};
+function payInfo(){const t=total(),c=parseFloat($('#pCash').value)||0,el=$('#payInfo');el.style.color='';
+ if(payM=='cash'){el.textContent=c>=t&&c>0?'Change: KES '+money(c-t):'';}else if(payM=='split'){const m=t-c;$('#pMpA').value=m>0?m.toFixed(2):'';el.textContent=m>0?'M-Pesa balance: KES '+money(m):''}else el.textContent=''}
+$('#pCash').oninput=payInfo;
+function openPay(){if(!cart.length)return toast('Bill is empty');$('#payTot').textContent='KES '+money(total());['pCash','pMpA','pRef','pCust'].forEach(i=>$('#'+i).value='');
+ const t=total();$('#quick').innerHTML=[t,...[50,100,200,500,1000,2000,5000].filter(x=>x>=t).slice(0,3)].map(x=>`<button type="button" onclick="$('#pCash').value=${x};payInfo()">${money(x).replace(/\.00$/,'')}</button>`).join('');setM('cash');$('#payD').showModal();$('#pCash').focus()}
+async function confirmPay(){const t=total(),c=parseFloat($('#pCash').value)||0,ref=$('#pRef').value.trim(),bad=m=>{$('#payInfo').textContent=m;$('#payInfo').style.color='#d64545'};let p;
+ if(payM=='cash'){if(c<t)return bad('Cash given is less than the total');p={cash:t,tendered:c,change:Math.round((c-t)*100)/100}}
+ else if(payM=='mpesa'){if(!ref)return bad('Enter the M-Pesa reference');p={mpesa:t,ref}}
+ else if(payM=='split'){if(c<=0||c>=t)return bad('Cash must be more than 0 and less than the total');if(!ref)return bad('Enter the M-Pesa reference');p={cash:c,mpesa:Math.round((t-c)*100)/100,ref}}
+ else{const cu=$('#pCust').value.trim();if(!cu)return bad('Enter the customer name');p={credit:t,customer:cu}}
+ const r=await api('/api/sale',{items:cart,payment:p});if(r.error)return bad(r.error);
+ cart=[];renderCart();$('#payD').close();lastSale=r.id;$('#rcpH').textContent='Sale #'+r.id+' saved'+(p.change?' – give change KES '+money(p.change):'');$('#rcpT').textContent=r.receipt;$('#rcpD').showModal();if(r.print_error)toast('Printer: '+r.print_error)}
+async function rcpPrint(){const r=await api('/api/print',{id:lastSale});toast(r.printed?'Sent to printer':'Printer: '+(r.print_error||'not set up – use browser print'))}
+function browserPrint(t){const f=document.createElement('iframe');f.style.cssText='position:absolute;width:0;height:0;border:0';document.body.appendChild(f);f.contentDocument.write(`<pre style="font:12px monospace">${esc(t)}</pre>`);f.contentDocument.close();f.contentWindow.focus();f.contentWindow.print();setTimeout(()=>f.remove(),3000)}
+// ---- products ----
+function editProd(id){editId=id;const p=products.find(x=>x.id==id)||{plu:'',name:'',unit_type:'kg',price:''};$('#pTitle').textContent=id?'Edit product':'Add product';$('#pPlu').value=p.plu;$('#pName').value=p.name;$('#pType').value=p.unit_type;$('#pPrice').value=p.price}
+async function saveProd(){const r=await api('/api/product',{id:editId,plu:$('#pPlu').value,name:$('#pName').value,unit_type:$('#pType').value,price:$('#pPrice').value});if(r.error)return toast(r.error.includes('UNIQUE')?'That PLU is already used':r.error);toast('Saved');editProd(null);loadProducts()}
+async function delProd(){if(editId&&confirm('Remove this product?')){await api('/api/product/delete',{id:editId});editProd(null);loadProducts()}}
+// ---- stock ----
+async function loadStock(){const d=$('#sDay');if(!d.value)d.value=today();const r=await api('/api/stock?day='+d.value);
+ $('#stb').innerHTML=r.map(x=>`<tr><td>${esc(x.name)}</td><td><input id="so${x.id}" type="number" step="any" value="${x.opening}" style="width:110px"></td><td><input id="sr${x.id}" type="number" step="any" value="${x.received}" style="width:110px"></td><td class="r">${x.sold.toFixed(3)}</td><td class="r"><b>${x.expected.toFixed(3)}</b></td><td><button onclick="saveStock(${x.id})">Save</button></td></tr>`).join('')||'<tr><td colspan=6 class="mut">Add per-kg products first</td></tr>'}
+async function saveStock(id){await api('/api/stock',{product_id:id,day:$('#sDay').value,opening:$('#so'+id).value,received:$('#sr'+id).value});toast('Stock saved');loadStock()}
+// ---- reports ----
+async function loadReport(){const f=$('#rFrom'),t=$('#rTo');if(!f.value)f.value=t.value=today();const r=await api(`/api/report?from=${f.value}&to=${t.value}`),z=r.report.totals;
+ $('#csv').href=`/api/export.csv?from=${f.value}&to=${t.value}`;
+ $('#stats').innerHTML=[['Revenue','KES '+money(z.total)],['Sales',z.n],['Cash','KES '+money(z.cash)],['M-Pesa','KES '+money(z.mpesa)],['Credit','KES '+money(z.credit)]].map(([a,b])=>`<div class="stat"><span class="mut">${a}</span><b>${b}</b></div>`).join('');
+ $('#rprod').innerHTML='<tr><th>Product</th><th class="r">Qty</th><th class="r">Revenue</th></tr>'+r.report.products.map(p=>`<tr><td>${esc(p.name)}</td><td class="r">${p.unit_type=='kg'?p.qty.toFixed(3)+' kg':p.qty}</td><td class="r">${money(p.revenue)}</td></tr>`).join('');
+ $('#ratt').innerHTML=r.report.attendants.map(a=>`<tr><td>${esc(a.username||'Shop')}</td><td class="r">${a.n} sales</td><td class="r">${money(a.total)}</td></tr>`).join('');
+ $('#rsales').innerHTML='<tr><th>#</th><th>Time</th><th class="r">Total</th><th></th></tr>'+r.sales.map(s=>`<tr style="${s.voided?'opacity:.45;text-decoration:line-through':''}"><td>${s.id}</td><td>${s.ts.slice(5,16)}</td><td class="r">${money(s.total)}</td><td class="r"><button onclick="viewRcpt(${s.id})">Receipt</button>${s.voided?'':` <button class="dng" onclick="voidSale(${s.id})">Void</button>`}</td></tr>`).join('')}
+async function viewRcpt(id){lastSale=id;$('#rcpH').textContent='Sale #'+id;$('#rcpT').textContent=(await api('/api/receipt?id='+id)).text;$('#rcpD').showModal()}
+async function voidSale(id){if(confirm('Void sale #'+id+'? It will be removed from totals and stock.')){await api('/api/void',{id});loadReport()}}
+// ---- scale & settings ----
+async function loadScale(){const [p,s]=await Promise.all([api('/api/ports'),api('/api/settings')]);
+ $('#cPort').innerHTML='<option value="">(auto-detect)</option>'+p.ports.map(x=>`<option value="${esc(x.device)}">${esc(x.device)} – ${esc(x.desc)}</option>`).join('');$('#cPort').value=s.port;
+ $('#cProf').innerHTML=p.profiles.map(x=>`<option>${esc(x)}</option>`).join('');$('#cProf').value=s.profile;$('#cBaud').value=s.baud;$('#cMode').value=s.mode;$('#cRx').value=s.custom_regex;
+ $('#sName').value=s.shop_name;$('#sAddr').value=s.shop_address;$('#sPrn').value=s.printer;$('#sWid').value=s.receipt_width;$('#sAuto').value=s.auto_print}
+async function connect(){await api('/api/scale/connect',{port:$('#cPort').value,baud:$('#cBaud').value,profile:$('#cProf').value,mode:$('#cMode').value,custom_regex:$('#cRx').value});toast('Connecting…')}
+async function saveSettings(){await api('/api/settings',{shop_name:$('#sName').value,shop_address:$('#sAddr').value,printer:$('#sPrn').value,receipt_width:$('#sWid').value,auto_print:$('#sAuto').value});toast('Settings saved')}
+loadProducts();renderCart();poll();
+</script></body></html>
