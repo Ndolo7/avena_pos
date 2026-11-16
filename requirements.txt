@@ -1,4 +1,6 @@
 pyserial>=3.5
+cryptography>=41
+segno>=1.6
 pywebview>=5.0
 pywin32>=306; sys_platform == "win32"
 pyinstaller>=6.0
