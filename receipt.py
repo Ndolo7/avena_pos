@@ -2,18 +2,22 @@
 ESC_INIT, CENTER, LEFT, BOLD_ON, BOLD_OFF, CUT = b"\x1b@", b"\x1ba\x01", b"\x1ba\x00", b"\x1bE\x01", b"\x1bE\x00", b"\x1dVB\x00"
 
 
+def fmt_w(kg, dec=3, unit="kg"):
+    return f"{kg / 1000:,.{dec}f} t" if unit == "t" else f"{kg:,.{dec}f} kg"
+
+
 def _row(l, r, w):
     return l[:max(0, w - len(r) - 1)].ljust(w - len(r)) + r
 
 
-def receipt_text(shop, sale, items, w=32):
+def receipt_text(shop, sale, items, w=32, dec=3, unit="kg"):
     L = [shop["name"].center(w)]
     if shop.get("address"):
         L.append(shop["address"].center(w))
     L += ["-" * w, f"Receipt #{sale['id']}", f"{sale['ts']}  {sale.get('username') or ''}", "-" * w]
     for i in items:
         L.append(i["name"][:w])
-        q = f"{i['qty']:.3f} kg" if i["unit_type"] == "kg" else f"{i['qty']:g} x"
+        q = fmt_w(i['qty'], dec, unit) if i["unit_type"] == "kg" else f"{i['qty']:g} x"
         L.append(_row(f"  {q} @ {i['unit_price']:,.2f}", f"{i['line_total']:,.2f}", w))
     L += ["-" * w, _row("TOTAL (KES)", f"{sale['total']:,.2f}", w)]
     if sale["cash"]:
@@ -28,8 +32,8 @@ def receipt_text(shop, sale, items, w=32):
     return "\n".join(L)
 
 
-def receipt_bytes(shop, sale, items, w=32):
-    body = receipt_text(shop, sale, items, w).encode("cp437", "replace")
+def receipt_bytes(shop, sale, items, w=32, dec=3, unit="kg"):
+    body = receipt_text(shop, sale, items, w, dec, unit).encode("cp437", "replace")
     return ESC_INIT + body + b"\n\n\n" + CUT
 
 
@@ -47,14 +51,14 @@ def print_raw(printer_name, data):
         win32print.ClosePrinter(h)
 
 
-def z_text(rep, shop="", w=48):
+def z_text(rep, shop="", w=48, dec=3, unit="kg"):
     t = rep["totals"]
     L = [f"{shop} - Z REPORT".center(w), f"{rep['from']} to {rep['to']}".center(w), "=" * w,
          _row("Transactions", str(t["n"]), w), _row("Total revenue", f"{t['total']:,.2f}", w),
          _row("  Cash", f"{t['cash']:,.2f}", w), _row("  M-Pesa", f"{t['mpesa']:,.2f}", w),
          _row("  Credit", f"{t['credit']:,.2f}", w), "-" * w, "SALES BY PRODUCT"]
     for p in rep["products"]:
-        q = f"{p['qty']:.3f} kg" if p["unit_type"] == "kg" else f"{p['qty']:g} pcs"
+        q = fmt_w(p['qty'], dec, unit) if p["unit_type"] == "kg" else f"{p['qty']:g} pcs"
         L.append(_row(f"{p['name']} ({q})", f"{p['revenue']:,.2f}", w))
     L += ["-" * w, "ATTENDANTS"]
     L += [_row(f"{a['username']} ({a['n']} sales)", f"{a['total']:,.2f}", w) for a in rep["attendants"]]
