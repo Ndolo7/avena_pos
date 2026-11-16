@@ -9,18 +9,18 @@ except ImportError:  # app still runs in simulator mode
     list_ports = None
 
 _GENERIC = (r"(?:(?P<st>ST|US),?\s*)?(?:(?:GS|NT),?\s*)?"
-            r"(?P<w>[+-]?\s*\d+(?:\.\d+)?)\s*(?P<u>kg|g|lb)?")
+            r"(?P<w>[+-]?\s*\d+(?:\.\d+)?)\s*(?P<u>kg|lb|g|t)?")
 
 # Presets. Always verify against the real indicator in the Technician screen.
 PROFILES = {
     "Generic (ST,GS,+001.250kg)": {"regex": _GENERIC, "reverse": False},
-    "Plain number (1.250 kg)":    {"regex": r"(?P<w>\d+(?:\.\d+)?)\s*(?P<u>kg|g)?", "reverse": False},
+    "Plain number (1.250 kg)":    {"regex": r"(?P<w>\d+(?:\.\d+)?)\s*(?P<u>kg|g|t)?", "reverse": False},
     "Yaohua reversed '=' frame":  {"regex": r"=(?P<w>\d+(?:\.\d+)?)", "reverse": True},
     "Custom (regex below)":       {"regex": None, "reverse": False},
 }
 
 
-def parse_frame(text, regex, reverse=False):
+def parse_frame(text, regex, reverse=False, default_unit="kg"):
     """Return (weight_kg, stable) or None. stable is None when the frame has no flag."""
     try:
         m = re.search(regex, text.strip(), re.I)
@@ -35,9 +35,11 @@ def parse_frame(text, regex, reverse=False):
         val = float(w)
     except ValueError:
         return None
-    unit = (m.groupdict().get("u") or "kg").lower()
+    unit = (m.groupdict().get("u") or default_unit).lower()
     if unit == "g":
         val /= 1000.0
+    elif unit == "t":
+        val *= 1000.0
     elif unit == "lb":
         val *= 0.45359237
     st = m.groupdict().get("st")
@@ -68,34 +70,38 @@ class ScaleReader:
         self.hist = collections.deque(maxlen=6)
         self.last_frame = 0.0
         self.regex, self.reverse, self.mode = PROFILES["Generic (ST,GS,+001.250kg)"]["regex"], False, "continuous"
-        self.sim_weight = 0.0
+        self.sim_weight, self.tol, self.default_unit = 0.0, 0.002, "kg"
+        self.cap_seq, self.last_cap, self.sim_print = 0, 0.0, False
         self._stop = threading.Event()
         self._thread = None
 
-    def configure(self, profile, custom_regex="", reverse=False, mode="continuous"):
+    def configure(self, profile, custom_regex="", reverse=False, mode="continuous", tol=0.002, unit="kg"):
         p = PROFILES.get(profile, PROFILES["Generic (ST,GS,+001.250kg)"])
         self.regex = p["regex"] or custom_regex or _GENERIC
         self.reverse = reverse if p["regex"] is None else p["reverse"]
-        self.mode = mode
+        self.mode, self.tol, self.default_unit = mode, float(tol), unit
 
     def feed(self, line):
         self.raw.append(line)
         self.last_frame = time.time()
-        r = parse_frame(line, self.regex, self.reverse)
+        r = parse_frame(line, self.regex, self.reverse, self.default_unit)
         if not r:
             return
         w, st = r
         with self.lock:
             self.hist.append(w)
             if st is None:  # no flag from scale: rolling-variance stability
-                st = len(self.hist) == self.hist.maxlen and max(self.hist) - min(self.hist) <= 0.002
+                st = len(self.hist) == self.hist.maxlen and max(self.hist) - min(self.hist) <= self.tol
             self.weight, self.stable = w, st
-            if self.mode == "button":
-                self.captured, self.stable = w, True
+            if self.mode == "button" and w > 0 and time.time() - self.last_cap > 1.0:  # PRINT pressed on the indicator
+                self.captured, self.stable, self.last_cap = w, True, time.time()
+                self.cap_seq += 1
 
     def status(self):
         if not self.connected:
             return "disconnected"
+        if self.mode == "button":
+            return "ready"
         if self.mode == "continuous" and time.time() - self.last_frame > 3:
             return "no_data"
         return "stable" if self.stable else "unstable"
@@ -129,10 +135,15 @@ class ScaleReader:
         self.connected = True
         while not self._stop.is_set():
             w = self.sim_weight
-            if w and time.time() < getattr(self, "sim_settle", 0):  # item just placed: wobble, then settle
-                self.feed(f"US,GS,{w + random.uniform(-0.06, 0.06):+08.3f}kg")
+            if self.mode == "button":  # like a scale set to "print on demand": live display, frame only when PRINT is pressed
+                with self.lock:
+                    self.weight = w
+                if self.sim_print:
+                    self.sim_print = False; self.feed(f"ST,GS,{w:+09.3f}kg")
+            elif w and time.time() < getattr(self, "sim_settle", 0):  # item just placed: wobble, then settle
+                self.feed(f"US,GS,{w + random.uniform(-0.06, 0.06) * (1 + w / 500):+09.3f}kg")
             else:
-                self.feed(f"ST,GS,{w:+08.3f}kg")
+                self.feed(f"ST,GS,{w:+09.3f}kg")
             time.sleep(0.15)
 
     def _run(self, port, baud):
