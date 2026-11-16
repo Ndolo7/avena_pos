@@ -3,132 +3,210 @@
 <style>
 :root{--navy:#0f2a43;--cy:#14b8c8;--bg:#f2f5f9;--card:#fff;--tx:#17202b;--mut:#6b7785;--ok:#16a34a;--warn:#e69500;--bad:#d64545;--bd:#e3e8ef}
 *{box-sizing:border-box}body{margin:0;font:15px/1.4 "Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--tx)}
-header{background:var(--navy);color:#fff;display:flex;align-items:center;gap:18px;padding:0 18px;height:56px;position:sticky;top:0;z-index:5}
+header{background:var(--navy);color:#fff;display:flex;align-items:center;gap:16px;padding:0 18px;height:56px;position:sticky;top:0;z-index:5}
 .brand{font-weight:800;font-size:18px}.brand b{color:var(--cy)}
 nav{display:flex;gap:4px;flex:1}nav button{background:none;border:0;color:#b9c8d8;padding:8px 14px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
 nav button.on,nav button:hover{background:#1c4066;color:#fff}
-.pill{background:#1c4066;padding:4px 12px;border-radius:99px;font-size:13px}
-main{padding:16px;max-width:1400px;margin:auto}section[hidden]{display:none}
+.pill{background:#1c4066;padding:4px 12px;border-radius:99px;font-size:13px}header button{background:#1c4066;color:#fff;border:0}
+main{padding:16px;max-width:1400px;margin:auto}section[hidden],[hidden]{display:none!important}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px}
+.screen{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#0f2a43,#14597a);padding:16px}.box{width:min(480px,94vw)}
+.mid{font:700 26px Consolas,monospace;letter-spacing:2px;background:#eef6fb;border-radius:10px;padding:10px;text-align:center;margin:8px 0}
+.err{color:var(--bad);min-height:20px;font-weight:600}textarea{width:100%;font:12px Consolas,monospace;padding:8px;border:1px solid var(--bd);border-radius:9px}
 .sell{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}@media(max-width:900px){.sell{grid-template-columns:1fr}}
-.wcard{background:var(--navy);border-radius:16px;padding:14px 20px;color:#fff;text-align:center;border-bottom:8px solid var(--bad)}
+.wcard{background:var(--navy);border-radius:16px;padding:12px 20px;color:#fff;text-align:center;border-bottom:8px solid var(--bad)}
 .wcard.ok{border-color:var(--ok)}.wcard.warn{border-color:var(--warn)}
-#w{font:700 84px/1 Consolas,"Cascadia Mono",monospace;color:var(--cy);letter-spacing:2px}.u{font-size:28px;color:#8fb3d1;margin-left:8px}
-#wstat{font-weight:700;letter-spacing:2px;font-size:13px;margin-top:4px}
+#w{font:700 80px/1 Consolas,"Cascadia Mono",monospace;color:var(--cy);letter-spacing:2px}.u{font-size:28px;color:#8fb3d1;margin-left:8px}
+#wstat{font-weight:700;letter-spacing:2px;font-size:13px;margin-top:4px}#wsub{color:#8fb3d1;font-size:14px}
 .wcard.ok #wstat{color:#5eead4}.wcard.warn #wstat{color:#fbbf24}.wcard.bad #wstat{color:#fca5a5}
 .bar{display:flex;gap:8px;align-items:center;margin:10px 0;flex-wrap:wrap}.bar .sp{flex:1}
 .demo{background:#fff8e6;border:1px dashed #e6b34d;border-radius:10px;padding:8px 12px}.demo button{margin:2px}
 button,.btn{font:inherit;font-weight:600;border:1px solid var(--bd);background:#fff;border-radius:9px;padding:8px 14px;cursor:pointer;color:var(--tx);text-decoration:none;display:inline-block}
 button:hover{border-color:var(--cy)}button.pri{background:var(--cy);border-color:var(--cy);color:#04262b}button.dng{color:var(--bad)}button.on{background:#fff2cc;border-color:#e6b34d}
-input,select{font:inherit;padding:8px 10px;border:1px solid var(--bd);border-radius:9px;background:#fff;min-width:0}
+input,select{font:inherit;padding:8px 10px;border:1px solid var(--bd);border-radius:9px;background:#fff;min-width:0}input:disabled{background:#eef1f5}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .tile{position:relative;text-align:left;padding:14px;border-radius:12px;background:#fff;border:1px solid var(--bd);min-height:84px}
 .tile b{display:block;font-size:16px}.tile span{color:var(--mut);font-size:13px}.tile i{position:absolute;top:8px;right:10px;font-style:normal;font-size:12px;background:#e8f7f9;color:#0b7a86;border-radius:6px;padding:0 6px}
-.tile:active{transform:scale(.97)}
+.tile.sel{outline:3px solid var(--cy);background:#e8f7f9}
 table{width:100%;border-collapse:collapse}th{text-align:left;font-size:12px;text-transform:uppercase;color:var(--mut);padding:6px}td{padding:8px 6px;border-top:1px solid var(--bd)}td.r,th.r{text-align:right}
+tr.pick{cursor:pointer}tr.pick:hover,tr.pick.on{background:#e8f7f9}
 .total{font-size:30px;font-weight:800;text-align:right;margin:10px 0}.mut{color:var(--mut)}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}.stat{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px}.stat b{display:block;font-size:22px}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#1f2937;color:#fff;padding:10px 18px;border-radius:99px;opacity:0;transition:.25s;pointer-events:none;z-index:20}.toast.show{opacity:1}
-dialog{border:0;border-radius:16px;padding:20px;min-width:340px;max-width:92vw;box-shadow:0 20px 60px #0006}dialog::backdrop{background:#0008}
-dialog h2{margin:0 0 10px}dialog label{display:block;margin:8px 0 2px;font-size:13px;color:var(--mut)}dialog input{width:100%}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#1f2937;color:#fff;padding:10px 18px;border-radius:99px;opacity:0;transition:.25s;pointer-events:none;z-index:50;max-width:92vw;text-align:center}.toast.show{opacity:1}
+dialog{border:0;border-radius:16px;padding:20px;min-width:340px;max-width:94vw;box-shadow:0 20px 60px #0006}dialog::backdrop{background:#0008}
+dialog h2{margin:0 0 10px}label{display:block;margin:8px 0 2px;font-size:13px;color:var(--mut)}.box input,.box select,dialog input{width:100%}
 menu{display:flex;gap:8px;justify-content:flex-end;padding:0;margin:14px 0 0}
 .seg{display:flex;gap:4px;margin:8px 0}.seg button{flex:1;padding:8px 4px}.seg button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
 pre{font:13px/1.3 Consolas,monospace;background:#f8fafc;border:1px solid var(--bd);padding:12px;border-radius:10px;overflow:auto;margin:0}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:900px){.two{grid-template-columns:1fr}}
-.row{display:flex;gap:8px;margin:6px 0;align-items:center;flex-wrap:wrap}.row label{width:130px;color:var(--mut);font-size:13px}.row input,.row select{flex:1}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}@media(max-width:900px){.two{grid-template-columns:1fr}}
+.row{display:flex;gap:8px;margin:6px 0;align-items:center;flex-wrap:wrap}.row label{width:140px;color:var(--mut);font-size:13px;margin:0}.row input,.row select{flex:1}
+.hint{color:var(--mut);font-size:12.5px;margin:2px 0 8px}h3{margin:14px 0 6px}h3:first-child{margin-top:0}
 </style></head><body>
-<header><div class="brand">Avena <b>Smart POS</b></div>
-<nav id="nav"><button data-t="sell" class="on">Sell</button><button data-t="products">Products</button><button data-t="stock">Stock</button><button data-t="reports">Reports</button><button data-t="scale">Scale &amp; Settings</button></nav>
-<span class="pill" id="pill">…</span></header>
+<div id="screen" class="screen" hidden></div>
+<div id="app" hidden>
+<header><div class="brand">Avena <b>Smart POS</b></div><span id="co" style="font-weight:600"></span>
+<nav id="nav"></nav><span class="pill" id="pill">…</span><span class="pill" id="who"></span><button onclick="logout()">Logout</button></header>
 <main>
-<section id="sell" class="sell">
- <div>
-  <div class="wcard bad" id="wcard"><div><span id="w">0.000</span><span class="u">kg</span></div><div id="wstat">CONNECTING…</div></div>
-  <div class="demo bar" id="demoBar" hidden><b>Demo scale:</b> <span id="demoBtns"></span><button onclick="sim(0)">Remove item</button></div>
-  <div class="bar"><input id="plu" placeholder="PLU code + Enter" style="width:150px"><button id="manBtn" onclick="toggleManual()">✎ Type weight</button><span class="sp"></span><span class="mut">Tap an item to bill the weight on the scale</span></div>
-  <div class="grid" id="grid"></div>
- </div>
- <div class="card"><h3 style="margin:0 0 6px">Current bill</h3>
+<div id="wpanel">
+ <div class="wcard bad" id="wcard"><div><span id="w">0</span><span class="u" id="wu">kg</span></div><div id="wsub"></div><div id="wstat">CONNECTING…</div></div>
+ <div class="demo bar" id="demoBar" hidden><b>Demo scale:</b> <span id="demoBtns"></span></div>
+</div>
+<section id="sell" class="sell"><div>
+  <div class="bar"><input id="scan" placeholder="Scan barcode or type PLU + Enter" style="width:260px"><button id="manBtn" onclick="toggleManual()" hidden>✎ Type weight</button><span class="sp"></span><span class="mut" id="sellHint"></span></div>
+  <div class="grid" id="grid"></div></div>
+ <div class="card"><h3>Current bill</h3>
   <table><thead><tr><th>Item</th><th class="r">Qty</th><th class="r">Price</th><th class="r">Total</th><th></th></tr></thead><tbody id="cart"></tbody></table>
   <div class="total" id="tot">KES 0.00</div>
-  <div class="bar"><button onclick="cart=[];renderCart()">Clear</button><span class="sp"></span><button class="pri" style="font-size:18px;padding:12px 28px" onclick="openPay()">Pay (F12)</button></div>
- </div>
+  <div class="bar"><button onclick="cart=[];renderCart()">Clear</button><span class="sp"></span><button class="pri" style="font-size:18px;padding:12px 28px" onclick="openPay()">Pay (F12)</button></div></div>
 </section>
-<section id="products" hidden><div class="two"><div class="card"><table><thead><tr><th>PLU</th><th>Name</th><th>Type</th><th class="r">Price</th></tr></thead><tbody id="ptb"></tbody></table></div>
- <div class="card"><h3 style="margin-top:0" id="pTitle">Add product</h3>
-  <div class="row"><label>PLU code</label><input id="pPlu"></div><div class="row"><label>Name</label><input id="pName"></div>
-  <div class="row"><label>Sold by</label><select id="pType"><option value="kg">Weight (per kg)</option><option value="fixed">Fixed price (each)</option></select></div>
+<section id="wb" hidden><div class="two">
+ <div class="card"><h3 id="wbT">New weighing</h3>
+  <div class="row"><label>Vehicle No</label><input id="wVeh" list="vehList" style="text-transform:uppercase" onchange="vehInfo()"></div>
+  <div class="row"><label>Trailer No</label><input id="wTr"></div><div class="row"><label>Customer</label><input id="wCus"></div>
+  <div class="row"><label>Driver</label><input id="wDrv"></div><div class="row"><label>Product</label><input id="wPro" list="proList"></div>
+  <div class="row"><label>Destination</label><input id="wDst"></div><div class="row"><label>Remarks</label><input id="wRem"></div>
+  <div class="row"><label>First weighing</label><select id="wFT"><option value="gross">Loaded vehicle – Gross first</option><option value="tare">Empty vehicle – Tare first</option></select></div>
+  <div class="row"><label>Stored tare</label><span id="wStored" class="mut" style="flex:1">–</span><label style="width:auto"><input type="checkbox" id="wUse" style="width:auto;flex:none" disabled> use it (single weighing)</label></div>
+  <div class="bar"><button class="pri" id="wGo" style="font-size:18px;padding:12px 24px" onclick="wbAction()">Capture first weight</button><button onclick="wbClear()">Clear</button></div></div>
+ <div><div class="card"><h3>Waiting for second weighing</h3><table id="wOpen"></table></div>
+ <div class="card"><h3>Today's tickets</h3><table id="wDone"></table></div></div></div>
+ <datalist id="vehList"></datalist><datalist id="proList"></datalist></section>
+<section id="products" hidden><div class="two"><div class="card"><table><thead><tr><th>PLU</th><th>Barcode</th><th>Name</th><th>Type</th><th class="r">Price</th></tr></thead><tbody id="ptb"></tbody></table></div>
+ <div class="card"><h3 id="pTitle">Add product</h3>
+  <div class="row"><label>PLU code</label><input id="pPlu"></div><div class="row"><label>Barcode</label><input id="pBar" placeholder="click here, then scan the product"></div>
+  <div class="row"><label>Name</label><input id="pName"></div>
+  <div class="row"><label>Sold by</label><select id="pType"><option value="kg">Weight (price per kg)</option><option value="fixed">Fixed price (each)</option></select></div>
   <div class="row"><label>Price (KES)</label><input id="pPrice" type="number" step="any"></div>
   <div class="bar"><button class="pri" onclick="saveProd()">Save</button><button onclick="editProd(null)">New</button><button class="dng" onclick="delProd()">Delete</button></div></div></div></section>
-<section id="stock" hidden><div class="card"><div class="bar"><b>Stock day</b><input type="date" id="sDay"><button onclick="loadStock()">Load</button><span class="mut">Opening + received − sold = expected closing (kg)</span></div>
- <table><thead><tr><th>Product</th><th>Opening kg</th><th>Received kg</th><th class="r">Sold kg</th><th class="r">Expected closing</th><th></th></tr></thead><tbody id="stb"></tbody></table></div></section>
-<section id="reports" hidden><div class="card bar"><b>From</b><input type="date" id="rFrom"><b>To</b><input type="date" id="rTo"><button class="pri" onclick="loadReport()">Run</button><a class="btn" id="csv" href="#">Export CSV (Excel)</a></div>
- <div class="stats" id="stats"></div><div class="two"><div class="card"><h3 style="margin-top:0">Sales by product</h3><table id="rprod"></table><h3>By attendant</h3><table id="ratt"></table></div>
- <div class="card"><h3 style="margin-top:0">Sales</h3><table id="rsales"></table></div></div></section>
-<section id="scale" hidden><div class="two"><div>
- <div class="card"><h3 style="margin-top:0">Scale connection (RS-232)</h3>
-  <div class="row"><label>COM port</label><select id="cPort"></select></div>
-  <div class="row"><label>Baud rate</label><select id="cBaud"><option>1200</option><option>2400</option><option>4800</option><option selected>9600</option><option>19200</option></select></div>
+<section id="stock" hidden><div class="card"><div class="bar"><b>Stock day</b><input type="date" id="sDay"><button onclick="loadStock()">Load</button><span class="mut">Opening + received − sold = expected closing</span></div>
+ <table><thead><tr><th>Product</th><th>Opening kg</th><th>Received kg</th><th class="r">Sold</th><th class="r">Expected closing</th><th></th></tr></thead><tbody id="stb"></tbody></table></div></section>
+<section id="reports" hidden><div class="card bar"><b>From</b><input type="date" id="rFrom"><b>To</b><input type="date" id="rTo"><button class="pri" onclick="loadReport()">Run</button><span class="sp"></span><a class="btn" id="csv" href="#">Sales CSV</a><a class="btn" id="csvT" href="#">Tickets CSV</a></div>
+ <div id="repR"><div class="stats" id="stats"></div><div class="two"><div class="card"><h3>Sales by product</h3><table id="rprod"></table><h3>By attendant</h3><table id="ratt"></table></div>
+ <div class="card"><h3>Sales</h3><table id="rsales"></table></div></div></div>
+ <div id="repW"><div class="stats" id="wstats"></div><div class="two"><div class="card"><h3>Net weight by product</h3><table id="wprod"></table></div><div class="card"><h3>Weighbridge tickets</h3><table id="wtix"></table></div></div></div></section>
+<section id="settings" hidden><div class="two"><div>
+ <div class="card adm"><h3>Business &amp; weights</h3>
+  <div class="row"><label>Installed for</label><select id="bMode"></select></div>
+  <div class="row"><label>Decimal places</label><select id="bDec"><option>0</option><option>1</option><option>2</option><option>3</option></select></div>
+  <div class="row"><label>Show weights in</label><select id="bUnit"><option value="kg">Kilograms (kg)</option><option value="t">Tonnes (t)</option></select></div>
+  <div class="row"><label>Typed weights</label><select id="bMan"><option value="0">Not allowed – weight must come from the scale</option><option value="1">Allowed (logged in audit)</option></select></div>
+  <div class="bar"><button class="pri" onclick="saveBiz()">Save</button></div></div>
+ <div class="card adm"><h3>Scale connection (RS-232)</h3>
+  <div class="row"><label>COM port</label><select id="cPort"></select></div><div class="row"><label>Baud rate</label><select id="cBaud"><option>1200</option><option>2400</option><option>4800</option><option>9600</option><option>19200</option></select></div>
   <div class="row"><label>Scale format</label><select id="cProf"></select></div>
-  <div class="row"><label>Capture mode</label><select id="cMode"><option value="continuous">Continuous (auto stable-lock)</option><option value="button">Button (scale PRINT key)</option></select></div>
   <div class="row"><label>Custom regex</label><input id="cRx" placeholder="(?P&lt;w&gt;\d+\.\d+)"></div>
-  <div class="bar"><button class="pri" onclick="connect()">Save &amp; connect</button><button onclick="api('/api/scale/demo',{}).then(()=>toast('Demo scale on'))">Use demo scale</button><button onclick="loadScale()">Refresh ports</button></div></div>
- <div class="card"><h3 style="margin-top:0">Live data from scale</h3><pre id="raw" style="height:210px"></pre></div></div>
- <div class="card"><h3 style="margin-top:0">Shop &amp; receipt</h3>
-  <div class="row"><label>Shop name</label><input id="sName"></div><div class="row"><label>Address / phone</label><input id="sAddr"></div>
+  <div class="row"><label>Unit if not sent</label><select id="cUnit"><option>kg</option><option>g</option><option>t</option></select></div>
+  <div class="row"><label>Stable within (kg)</label><input id="cTol" type="number" step="any"></div>
+  <div class="row"><label>How is weight taken?</label><select id="cMode"><option value="continuous">Automatic – wait until the weight is stable</option><option value="button">Scale PRINT button sends the weight</option></select></div>
+  <p class="hint">Automatic: the app watches the readings and locks the weight once the platter settles. PRINT button: the weight is taken only when the operator presses PRINT on the indicator (set the indicator to print on demand). Stable tolerance: small (0.002) for shop scales, larger (5–20) for truck scales.</p>
+  <div class="bar"><button class="pri" onclick="connect()">Save &amp; connect</button><button onclick="api('/api/scale/demo',{}).then(()=>toast('Demo scale on'))">Use demo scale</button><button onclick="loadSettings()">Refresh ports</button></div>
+  <pre id="raw" style="height:130px"></pre></div>
+ <div class="card adm" id="wbCard"><h3>Weighbridge tickets</h3>
+  <div class="row"><label>Ticket prefix</label><input id="tPre"></div><div class="row"><label>Indicator model</label><input id="tInd" placeholder="e.g. XK3190-A9"></div>
+  <div class="row"><label>Default first weighing</label><select id="tFirst"><option value="gross">Gross (loaded) first</option><option value="tare">Tare (empty) first</option></select></div>
+  <div class="row"><label>Company logo</label><input type="file" id="tLogoF" accept="image/*"><img id="tLogoP" style="max-height:48px"></div>
+  <div class="bar"><button class="pri" onclick="saveWB()">Save</button></div></div></div>
+ <div>
+ <div class="card"><h3>Shop &amp; receipt</h3>
+  <div class="row"><label>Shop / company</label><input id="sName"></div><div class="row"><label>Address / phone</label><input id="sAddr"></div>
   <div class="row"><label>Windows printer</label><input id="sPrn" placeholder="exact printer name"></div>
   <div class="row"><label>Paper width</label><select id="sWid"><option value="32">58 mm</option><option value="48">80 mm</option></select></div>
   <div class="row"><label>Auto-print receipt</label><select id="sAuto"><option value="0">No</option><option value="1">Yes</option></select></div>
-  <div class="bar"><button class="pri" onclick="saveSettings()">Save</button></div></div></div></section>
-</main>
+  <div class="bar"><button class="pri" onclick="saveShop()">Save</button></div></div>
+ <div class="card"><h3>Users</h3><table id="utb"></table>
+  <div class="row"><input id="uName" placeholder="username"><input id="uPass" type="password" placeholder="password"><select id="uRole"></select><button class="pri" onclick="saveUser()">Add / reset</button></div>
+  <p class="hint">Operator: weigh &amp; sell only. Manager: + products, stock, reports, voids, operators. Administrator: everything incl. scale, mode and licence.</p></div>
+ <div class="card adm"><h3>Licence</h3><div id="licI"></div><label>Replace licence key</label><textarea id="licK" rows="3"></textarea><div class="bar"><button onclick="changeLic()">Apply key</button></div></div>
+ </div></div></section>
+</main></div>
 <dialog id="askD"><form method="dialog"><h2 id="askT"></h2><label id="askL"></label><input id="askI" type="number" step="any" inputmode="decimal"><menu><button value="cancel">Cancel</button><button value="ok" class="pri">OK</button></menu></form></dialog>
+<dialog id="yesD"><form method="dialog"><h2 id="yesT"></h2><menu><button value="no">No</button><button value="yes" class="pri">Yes</button></menu></form></dialog>
 <dialog id="payD"><form method="dialog"><h2>Total <span id="payTot"></span></h2>
  <div class="seg" id="payM"><button type="button" data-m="cash" class="on">Cash</button><button type="button" data-m="mpesa">M-Pesa</button><button type="button" data-m="split">Split</button><button type="button" data-m="credit">Credit</button></div>
  <div id="fCash"><label>Cash given</label><input id="pCash" type="number" step="any"><div class="bar" id="quick"></div></div>
- <div id="fMpA"><label>M-Pesa amount</label><input id="pMpA" type="number" step="any"></div>
- <div id="fRef"><label>M-Pesa reference</label><input id="pRef" placeholder="e.g. SFK3X9Q2LM"></div>
- <div id="fCust"><label>Customer name</label><input id="pCust"></div>
+ <div id="fMpA"><label>M-Pesa amount</label><input id="pMpA" type="number" step="any" readonly></div>
+ <div id="fRef"><label>M-Pesa reference</label><input id="pRef" placeholder="e.g. SFK3X9Q2LM"></div><div id="fCust"><label>Customer name</label><input id="pCust"></div>
  <p id="payInfo" style="font-weight:700;min-height:22px"></p><menu><button value="cancel">Cancel</button><button type="button" class="pri" onclick="confirmPay()">Confirm payment</button></menu></form></dialog>
 <dialog id="rcpD"><h2 id="rcpH">Receipt</h2><pre id="rcpT"></pre><menu><button onclick="rcpPrint()">Print (thermal)</button><button onclick="browserPrint($('#rcpT').textContent)">Print (browser)</button><button class="pri" onclick="$('#rcpD').close()">Done</button></menu></dialog>
+<dialog id="tkD" style="width:min(860px,96vw)"><iframe id="tkF" style="width:100%;height:68vh;border:1px solid var(--bd);border-radius:10px"></iframe><menu><button class="pri" onclick="$('#tkF').contentWindow.print()">Print ticket</button><button onclick="$('#tkD').close()">Close</button></menu></dialog>
 <div class="toast" id="toast"></div>
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const api=async(u,b)=>{const r=await fetch(u,b===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});return r.json()};
+async function api(u,b){const r=await fetch(u,b===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});const j=await r.json();if(j&&j.need)init();return j}
 const money=n=>Number(n||0).toLocaleString('en-KE',{minimumFractionDigits:2,maximumFractionDigits:2});
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const today=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
-let products=[],cart=[],manual=false,payM='cash',editId=null,lastSale=null,tabNow='sell';
-function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),2600)}
+const dd=s=>s?s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(0,4):'',tt=s=>{if(!s)return'';let h=+s.slice(11,13);const ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+s.slice(14,16)+' '+ap};
+let boot={},cfg={},me=null,products=[],cart=[],manual=false,selected=null,payM='cash',editId=null,lastSale=null,tabNow='',sc={},lastSeq=null,wbSel=null,logoData=null,polling=false;
+const lvl=()=>({operator:1,manager:2,admin:3}[me.role]),hasR=()=>cfg.biz_mode!=='weighbridge',hasW=()=>cfg.biz_mode!=='retail';
+const dec=()=>+cfg.decimals,isT=()=>cfg.display_unit==='t',fnum=kg=>(isT()?kg/1000:kg).toLocaleString('en-US',{minimumFractionDigits:dec(),maximumFractionDigits:dec()}),fw=kg=>fnum(kg)+(isT()?' t':' kg');
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),3200)}
 function ask(title,label,val){return new Promise(res=>{$('#askT').textContent=title;$('#askL').textContent=label;const d=$('#askD'),i=$('#askI');i.value=val;d.onclose=()=>res(d.returnValue==='ok'?i.value:null);d.showModal();i.select()})}
-$('#nav').onclick=e=>{const t=e.target.dataset.t;if(!t)return;tabNow=t;$$('#nav button').forEach(b=>b.classList.toggle('on',b===e.target));$$('main>section').forEach(s=>s.hidden=s.id!==t);
- ({sell:loadProducts,products:loadProducts,stock:loadStock,reports:loadReport,scale:loadScale})[t]()};
-// ---- live scale ----
-async function poll(){try{const s=await api('/api/scale');$('#w').textContent=s.weight.toFixed(3);
- const m={stable:['ok','STABLE – READY'],unstable:['warn','SETTLING…'],no_data:['bad','NO DATA FROM SCALE'],disconnected:['bad','SCALE DISCONNECTED – CHECK CABLE']}[s.status];
- $('#wcard').className='wcard '+m[0];$('#wstat').textContent=m[1];$('#pill').textContent=s.demo?'● Demo scale':'● '+(s.port||'Scale');$('#demoBar').hidden=!s.demo||tabNow!=='sell';
- if(tabNow==='scale')$('#raw').textContent=s.raw.join('\n')||'(waiting for data…)'}catch(e){$('#wstat').textContent='APP OFFLINE';$('#wcard').className='wcard bad'}setTimeout(poll,150)}
-const sim=w=>api('/api/scale/sim',{weight:w});
-$('#demoBtns').innerHTML=[0.5,1.45,2.3,5].map(w=>`<button onclick="sim(${w})">${w} kg</button>`).join('');
-// ---- sell ----
-async function loadProducts(){products=await api('/api/products');$('#grid').innerHTML=products.map(p=>`<button class="tile" data-id="${p.id}"><i>${esc(p.plu)}</i><b>${esc(p.name)}</b><span>KES ${money(p.price)}${p.unit_type=='kg'?' / kg':' each'}</span></button>`).join('')||'<p class="mut">No products yet – add some under Products.</p>';
- $('#ptb').innerHTML=products.map(p=>`<tr style="cursor:pointer" onclick="editProd(${p.id})"><td>${esc(p.plu)}</td><td>${esc(p.name)}</td><td>${p.unit_type=='kg'?'per kg':'each'}</td><td class="r">${money(p.price)}</td></tr>`).join('')}
+function yes(t){return new Promise(res=>{$('#yesT').textContent=t;const d=$('#yesD');d.onclose=()=>res(d.returnValue==='yes');d.showModal()})}
+// ---------- start-up screens ----------
+async function init(){boot=await api('/api/boot');if(!boot.licensed)return showLicense();if(boot.needs_setup)return showSetup();if(!boot.user){me=null;return showLogin()}me=boot.user;cfg=boot.config;startApp()}
+function scr(h){$('#app').hidden=true;$('#screen').hidden=false;$('#screen').innerHTML=`<div class="box card"><div class="brand" style="color:var(--navy);font-size:22px">Avena <b>Smart POS</b></div>${h}</div>`}
+function showLicense(){scr(`<h2>Activate this computer</h2><p class="mut">Send this Computer ID to your software provider to receive your licence key.</p><div class="mid">${esc(boot.machine_id)}</div>
+ <button onclick="navigator.clipboard.writeText('${boot.machine_id}');toast('Copied')">Copy ID</button><label>Licence key</label><textarea id="lk" rows="4" placeholder="Paste the licence key here"></textarea>
+ <p class="err" id="lerr">${esc(boot.reason)}</p><button class="pri" style="width:100%" onclick="activate()">Activate</button>`)}
+async function activate(){const r=await api('/api/license/activate',{key:$('#lk').value});if(r.error)$('#lerr').textContent=r.error;else init()}
+const BN={retail:'Small-scale trader – kg scale, POS & receipts',weighbridge:'Weighbridge – vehicle scale, tickets',both:'Both'};
+function showSetup(){scr(`<h2>First-time setup</h2><p class="mut">Licensed to <b>${esc(boot.company)}</b></p><label>Shop / company name</label><input id="su_n" value="${esc(boot.company)}">
+ <label>This installation is for</label><select id="su_m">${boot.config.biz_modes.map(m=>`<option value="${m}">${BN[m]}</option>`).join('')}</select>
+ <label>Administrator username</label><input id="su_u" value="admin"><label>Administrator password</label><input id="su_p" type="password">
+ <p class="err" id="serr"></p><button class="pri" style="width:100%" onclick="doSetup()">Create &amp; start</button>`)}
+async function doSetup(){const r=await api('/api/setup',{shop_name:$('#su_n').value,biz_mode:$('#su_m').value,username:$('#su_u').value,password:$('#su_p').value});if(r.error)$('#serr').textContent=r.error;else init()}
+function showLogin(){scr(`<h2>${esc(boot.config.shop_name||boot.company)}</h2><label>Username</label><input id="lu"><label>Password</label><input id="lp" type="password"><p class="err" id="lerr"></p><button class="pri" style="width:100%" onclick="doLogin()">Log in</button>`);
+ $('#screen').onkeydown=e=>{if(e.key==='Enter')doLogin()};$('#lu').focus()}
+async function doLogin(){const r=await api('/api/login',{username:$('#lu').value,password:$('#lp').value});if(r.error)$('#lerr').textContent=r.error;else{$('#screen').onkeydown=null;init()}}
+async function logout(){await api('/api/logout',{});me=null;init()}
+// ---------- app shell ----------
+function tabs(){return[['sell','Sell',hasR(),1],['wb','Weighbridge',hasW(),1],['products',hasR()?'Products':'Commodities',true,2],['stock','Stock',hasR(),2],['reports','Reports',true,2],['settings','Settings',true,2]].filter(t=>t[2]&&lvl()>=t[3])}
+function startApp(){$('#screen').hidden=true;$('#app').hidden=false;$('#who').textContent=me.username+' · '+me.role;$('#co').textContent=cfg.shop_name||cfg.company;
+ $('#nav').innerHTML=tabs().map(t=>`<button data-t="${t[0]}">${t[1]}</button>`).join('');$$('.adm').forEach(e=>e.hidden=me.role!=='admin');$('#wbCard').hidden=me.role!=='admin'||!hasW();
+ $('#manBtn').hidden=cfg.allow_manual!=='1';lastSeq=null;go(tabs()[0][0]);if(!polling){polling=true;poll()}}
+$('#nav').onclick=e=>{if(e.target.dataset.t)go(e.target.dataset.t)};
+function go(t){tabNow=t;$$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));$$('main>section').forEach(s=>s.hidden=s.id!==t);$('#wpanel').hidden=!(t==='sell'||t==='wb');renderDemo();
+ ({sell:()=>{loadProducts();$('#scan').focus()},wb:loadWB,products:loadProducts,stock:loadStock,reports:loadReport,settings:loadSettings})[t]()}
+async function reloadCfg(){boot=await api('/api/boot');cfg=boot.config;startApp()}
+// ---------- live scale ----------
+const ST={stable:['ok','STABLE – READY'],unstable:['warn','SETTLING…'],ready:['ok','READY – PRESS PRINT ON THE SCALE'],no_data:['bad','NO DATA FROM SCALE'],disconnected:['bad','SCALE DISCONNECTED – CHECK CABLE']};
+async function poll(){if(me){try{sc=await api('/api/scale');if(!sc.error){const m=ST[sc.status];$('#w').textContent=fnum(sc.weight);$('#wu').textContent=isT()?'t':'kg';
+ $('#wsub').textContent=isT()?sc.weight.toLocaleString('en-US')+' kg':(sc.weight/1000).toFixed(3)+' t';
+ $('#wcard').className='wcard '+m[0];$('#wstat').textContent=m[1];$('#pill').textContent=sc.demo?'● Demo scale':'● '+(db_port());$('#demoBar').hidden=!sc.demo||!(tabNow==='sell'||tabNow==='wb');
+ if(tabNow==='settings')$('#raw').textContent=sc.raw.join('\n')||'(waiting for data…)';
+ if(lastSeq===null)lastSeq=sc.cap_seq;else if(sc.cap_seq!==lastSeq){lastSeq=sc.cap_seq;onPrintKey()}}}catch(e){$('#wstat').textContent='APP OFFLINE';$('#wcard').className='wcard bad'}}setTimeout(poll,150)}
+const db_port=()=>sc.port||'Scale';
+function onPrintKey(){if(cfg.mode!=='button')return;if(tabNow==='sell'&&selected){const p=products.find(x=>x.id==selected);if(p)addProduct(p)}else if(tabNow==='wb')wbAction();else toast('Weight captured: '+fw(sc.captured)+(tabNow==='sell'?' – now tap a product':''))}
+const sim=(w,p)=>api('/api/scale/sim',p?{print:1}:{weight:w});
+function renderDemo(){const ws=tabNow==='wb'?[12400,18950,28600,41000]:[0.5,1.45,2.3,5];$('#demoBtns').innerHTML=ws.map(w=>`<button onclick="sim(${w})">${w.toLocaleString()} kg</button>`).join('')+'<button onclick="sim(0)">Remove load</button>'+(cfg.mode==='button'?'<button class="pri" onclick="sim(0,1)">🖨 Scale PRINT</button>':'')}
+// ---------- sell ----------
+async function loadProducts(){products=await api('/api/products');$('#sellHint').textContent=cfg.mode==='button'?'Tap an item, then press PRINT on the scale':'Weigh the item, then tap it';
+ $('#grid').innerHTML=products.map(p=>`<button class="tile${selected==p.id?' sel':''}" data-id="${p.id}"><i>${esc(p.plu)}</i><b>${esc(p.name)}</b><span>KES ${money(p.price)}${p.unit_type=='kg'?' / kg':' each'}</span></button>`).join('')||'<p class="mut">No products yet – add some under Products.</p>';
+ $('#ptb').innerHTML=products.map(p=>`<tr class="pick" onclick="editProd(${p.id})"><td>${esc(p.plu)}</td><td>${esc(p.barcode||'')}</td><td>${esc(p.name)}</td><td>${p.unit_type=='kg'?'per kg':'each'}</td><td class="r">${money(p.price)}</td></tr>`).join('');
+ $('#proList').innerHTML=products.map(p=>`<option value="${esc(p.name)}">`).join('')}
 $('#grid').onclick=e=>{const t=e.target.closest('.tile');if(t)addProduct(products.find(p=>p.id==t.dataset.id))};
-$('#plu').onkeydown=e=>{if(e.key==='Enter'){const p=products.find(p=>p.plu===e.target.value.trim());e.target.value='';p?addProduct(p):toast('No product with that PLU')}};
-document.onkeydown=e=>{if(e.key==='F12'){e.preventDefault();openPay()}};
-function toggleManual(){manual=!manual;$('#manBtn').classList.toggle('on',manual);if(manual)toast('Next weighed item: you will type the weight')}
-async function addProduct(p){let qty,man=0;
- if(p.unit_type=='kg'){if(manual){qty=parseFloat(await ask('Type weight',p.name+' – kg',''));manual=false;$('#manBtn').classList.remove('on');if(!(qty>0))return;man=1}
+$('#scan').onkeydown=e=>{if(e.key==='Enter'){const c=e.target.value.trim();e.target.value='';if(!c)return;const p=products.find(p=>p.barcode===c)||products.find(p=>p.plu===c);p?addProduct(p,true):toast('No product with code '+c)}};
+document.addEventListener('keydown',e=>{if(e.key==='F12'&&tabNow==='sell'){e.preventDefault();openPay()}
+ if(tabNow==='sell'&&!e.ctrlKey&&!e.altKey&&e.key.length===1&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)&&!document.querySelector('dialog[open]'))$('#scan').focus()});
+function toggleManual(){manual=!manual;$('#manBtn').classList.toggle('on',manual);if(manual)toast('Next weighed item: type the weight')}
+function markSel(){$$('.tile').forEach(t=>t.classList.toggle('sel',t.dataset.id==selected))}
+async function addProduct(p,scanned){let qty,man=0;
+ if(p.unit_type=='kg'){
+  if(manual){qty=parseFloat(await ask('Type weight','Weight in kg – '+p.name,''));manual=false;$('#manBtn').classList.remove('on');if(!(qty>0))return;man=1}
+  else if(cfg.mode==='button'&&!(sc.captured>0)){selected=p.id;markSel();return toast('Selected '+p.name+' – press PRINT on the scale')}
   else{qty=(await api('/api/take',{})).weight;if(!qty)return toast('Waiting for a stable weight on the scale…')}}
+ else if(scanned){const ex=cart.find(i=>i.product_id==p.id&&i.unit_type=='fixed');if(ex){ex.qty++;renderCart();return}qty=1}
  else{qty=parseInt(await ask('Quantity',p.name,'1'));if(!(qty>0))return}
- cart.push({product_id:p.id,name:p.name,unit_type:p.unit_type,qty,unit_price:p.price,manual:man});renderCart()}
+ selected=null;markSel();cart.push({product_id:p.id,name:p.name,unit_type:p.unit_type,qty,unit_price:p.price,manual:man});renderCart();$('#scan').focus()}
 const lineT=i=>Math.round(i.qty*i.unit_price*100)/100,total=()=>Math.round(cart.reduce((a,i)=>a+lineT(i),0)*100)/100;
-function renderCart(){$('#cart').innerHTML=cart.map((i,n)=>`<tr><td>${esc(i.name)}${i.manual?' ✎':''}</td><td class="r">${i.unit_type=='kg'?i.qty.toFixed(3)+' kg':i.qty}</td><td class="r">${money(i.unit_price)}</td><td class="r">${money(lineT(i))}</td><td><button class="dng" style="padding:2px 8px" onclick="cart.splice(${n},1);renderCart()">✕</button></td></tr>`).join('')||'<tr><td colspan=5 class="mut">Empty – weigh an item and tap it</td></tr>';$('#tot').textContent='KES '+money(total())}
-// ---- pay ----
+function renderCart(){$('#cart').innerHTML=cart.map((i,n)=>`<tr><td>${esc(i.name)}${i.manual?' ✎':''}</td><td class="r">${i.unit_type=='kg'?fw(i.qty):i.qty}</td><td class="r">${money(i.unit_price)}</td><td class="r">${money(lineT(i))}</td><td><button class="dng" style="padding:2px 8px" onclick="cart.splice(${n},1);renderCart()">✕</button></td></tr>`).join('')||'<tr><td colspan="5" class="mut">Empty – scan or weigh an item</td></tr>';$('#tot').textContent='KES '+money(total())}
+// ---------- pay ----------
 const SHOW={cash:['fCash'],mpesa:['fRef'],split:['fCash','fMpA','fRef'],credit:['fCust']};
 function setM(m){payM=m;$$('#payM button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));['fCash','fMpA','fRef','fCust'].forEach(f=>$('#'+f).hidden=!SHOW[m].includes(f));payInfo()}
 $('#payM').onclick=e=>{if(e.target.dataset.m)setM(e.target.dataset.m)};
 function payInfo(){const t=total(),c=parseFloat($('#pCash').value)||0,el=$('#payInfo');el.style.color='';
- if(payM=='cash'){el.textContent=c>=t&&c>0?'Change: KES '+money(c-t):'';}else if(payM=='split'){const m=t-c;$('#pMpA').value=m>0?m.toFixed(2):'';el.textContent=m>0?'M-Pesa balance: KES '+money(m):''}else el.textContent=''}
+ if(payM=='cash')el.textContent=c>=t&&c>0?'Change: KES '+money(c-t):'';else if(payM=='split'){const m=t-c;$('#pMpA').value=m>0?m.toFixed(2):'';el.textContent=m>0?'M-Pesa balance: KES '+money(m):''}else el.textContent=''}
 $('#pCash').oninput=payInfo;
 function openPay(){if(!cart.length)return toast('Bill is empty');$('#payTot').textContent='KES '+money(total());['pCash','pMpA','pRef','pCust'].forEach(i=>$('#'+i).value='');
  const t=total();$('#quick').innerHTML=[t,...[50,100,200,500,1000,2000,5000].filter(x=>x>=t).slice(0,3)].map(x=>`<button type="button" onclick="$('#pCash').value=${x};payInfo()">${money(x).replace(/\.00$/,'')}</button>`).join('');setM('cash');$('#payD').showModal();$('#pCash').focus()}
@@ -141,29 +219,84 @@ async function confirmPay(){const t=total(),c=parseFloat($('#pCash').value)||0,r
  cart=[];renderCart();$('#payD').close();lastSale=r.id;$('#rcpH').textContent='Sale #'+r.id+' saved'+(p.change?' – give change KES '+money(p.change):'');$('#rcpT').textContent=r.receipt;$('#rcpD').showModal();if(r.print_error)toast('Printer: '+r.print_error)}
 async function rcpPrint(){const r=await api('/api/print',{id:lastSale});toast(r.printed?'Sent to printer':'Printer: '+(r.print_error||'not set up – use browser print'))}
 function browserPrint(t){const f=document.createElement('iframe');f.style.cssText='position:absolute;width:0;height:0;border:0';document.body.appendChild(f);f.contentDocument.write(`<pre style="font:12px monospace">${esc(t)}</pre>`);f.contentDocument.close();f.contentWindow.focus();f.contentWindow.print();setTimeout(()=>f.remove(),3000)}
-// ---- products ----
-function editProd(id){editId=id;const p=products.find(x=>x.id==id)||{plu:'',name:'',unit_type:'kg',price:''};$('#pTitle').textContent=id?'Edit product':'Add product';$('#pPlu').value=p.plu;$('#pName').value=p.name;$('#pType').value=p.unit_type;$('#pPrice').value=p.price}
-async function saveProd(){const r=await api('/api/product',{id:editId,plu:$('#pPlu').value,name:$('#pName').value,unit_type:$('#pType').value,price:$('#pPrice').value});if(r.error)return toast(r.error.includes('UNIQUE')?'That PLU is already used':r.error);toast('Saved');editProd(null);loadProducts()}
-async function delProd(){if(editId&&confirm('Remove this product?')){await api('/api/product/delete',{id:editId});editProd(null);loadProducts()}}
-// ---- stock ----
+// ---------- weighbridge ----------
+async function loadWB(){$('#wFT').value=wbSel?$('#wFT').value:(cfg.first_weigh||'gross');const [o,d]=await Promise.all([api('/api/tickets/open'),api(`/api/tickets?from=${today()}&to=${today()}`)]);
+ $('#wOpen').innerHTML=o.length?o.map(t=>`<tr class="pick${wbSel==t.id?' on':''}" onclick="wbPick(${t.id})"><td><b>${esc(t.vehicle)}</b><br><span class="mut">${esc(t.customer)}</span></td><td>${t.first_type==='gross'?'Gross':'Tare'} ${fw(t.first_kg)}</td><td class="mut">${tt(t.first_ts)}</td></tr>`).join(''):'<tr><td class="mut">No vehicles waiting</td></tr>';
+ $('#vehList').innerHTML=o.map(t=>`<option value="${esc(t.vehicle)}">`).join('');
+ $('#wDone').innerHTML=d.filter(t=>t.status!=='open').map(t=>`<tr style="${t.status==='void'?'opacity:.45;text-decoration:line-through':''}"><td>${esc(t.ticket_no)}</td><td>${esc(t.vehicle)}</td><td class="r">${t.net_kg!=null?fw(t.net_kg):''}</td><td class="r"><button onclick="showTicket(${t.id})">View</button></td></tr>`).join('')||'<tr><td class="mut">None yet today</td></tr>'}
+const WF=['wVeh','wTr','wCus','wDrv','wPro','wDst','wRem','wFT'];
+function wbPick(id){api('/api/ticket?id='+id).then(t=>{if(wbSel===id)return wbClear();wbSel=id;[t.vehicle,t.trailer,t.customer,t.driver,t.product,t.destination,t.remarks,t.first_type].forEach((v,i)=>$('#'+WF[i]).value=v||'');
+ WF.slice(0,7).forEach(f=>$('#'+f).disabled=f!=='wRem'&&true);$('#wFT').disabled=true;$('#wUse').disabled=true;$('#wUse').checked=false;$('#wbT').textContent='Second weighing – '+t.vehicle;$('#wGo').textContent='Capture second weight & finish';loadWB()})}
+function wbClear(){wbSel=null;WF.forEach(f=>{$('#'+f).disabled=false;if(f!=='wFT')$('#'+f).value=''});$('#wFT').disabled=false;$('#wFT').value=cfg.first_weigh||'gross';$('#wStored').textContent='–';$('#wUse').checked=false;$('#wUse').disabled=true;$('#wbT').textContent='New weighing';$('#wGo').textContent='Capture first weight';loadWB()}
+async function vehInfo(){const v=$('#wVeh').value.trim();$('#wUse').checked=false;if(!v){$('#wUse').disabled=true;return}const r=await api('/api/vehicle?no='+encodeURIComponent(v));
+ $('#wStored').textContent=r.info?`${fw(r.info.tare_kg)} (${dd(r.info.updated)})`:'none yet – first double weighing will store it';$('#wUse').disabled=!r.info}
+async function wbAction(){let r;
+ if(wbSel){r=await api('/api/ticket/close',{id:wbSel})}
+ else{const g=id=>$('#'+id).value;r=await api('/api/ticket/open',{vehicle:g('wVeh'),trailer:g('wTr'),customer:g('wCus'),driver:g('wDrv'),product:g('wPro'),destination:g('wDst'),remarks:g('wRem'),first_type:g('wFT'),stored_tare:$('#wUse').checked})}
+ if(r.error)return toast(r.error);wbClear();if(r.status==='done')showTicket(r.id);else toast('First weight saved: '+fw(r.first_kg)+' – '+r.vehicle)}
+async function showTicket(id){const t=await api('/api/ticket?id='+id);$('#tkF').srcdoc=ticketDoc(t);$('#tkD').showModal()}
+function ticketDoc(t){const k=x=>Number(x).toLocaleString('en-US',{minimumFractionDigits:dec(),maximumFractionDigits:dec()})+' kg',g=t.first_type==='gross',single=(t.wmode||'').startsWith('Single');
+ const r1=[g?'First Weigh (Gross)':'First Weigh (Tare)',tt(t.first_ts),t.first_kg],r2=[(g?'Second Weigh (Tare':'Second Weigh (Gross')+(single?' – stored)':')'),single?'stored':tt(t.second_ts),t.second_kg];
+ const row=(a,b)=>`<div class="r"><span>${a}</span><span>:</span><span>${esc(b)||'&nbsp;'}</span></div>`;
+ return `<html><head><meta charset="utf-8"><style>@page{size:A5;margin:8mm}body{font:15px "Segoe UI",Arial,sans-serif;margin:0;padding:10px;color:#111}
+ .top{display:flex;align-items:center;gap:14px;border-bottom:3px solid #1737a0;padding-bottom:6px}.top img{max-height:62px}.top b{font-size:20px}.top small{display:block;color:#444}
+ .title{background:#1737a0;color:#fff;text-align:center;font:800 26px Arial;border-radius:10px;padding:4px;margin:10px 40px}
+ .meta{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}.tn{font:800 26px Arial}.dt{border:2px solid #1737a0;border-radius:10px;padding:4px 12px;background:#eef3ff}
+ .r{display:grid;grid-template-columns:130px 18px 1fr;font-size:16px;padding:1px 0}.r span:first-child{font-weight:700}
+ .h{background:#1737a0;color:#fff;text-align:center;font-weight:800;border-radius:8px 8px 0 0;margin-top:8px;padding:3px}
+ table{width:100%;border-collapse:collapse;border:2px solid #1737a0}th{background:#cfdcf7}th,td{border:1px solid #1737a0;padding:4px 8px;text-align:center}td:first-child{text-align:left}td:last-child{font-weight:800}
+ .net{display:flex;background:#cfdcf7;border:2px solid #1737a0;border-top:0}.net div{flex:1;padding:8px 12px}.net b{font:800 28px Arial;color:#1737a0}.net .v{text-align:center;border-left:2px solid #1737a0}.net .v b{color:#000;font-size:30px}
+ .sig{display:flex;gap:30px;margin-top:22px;align-items:flex-end}.sig div{flex:1;border-top:1px solid #000;text-align:center;font-size:12px;padding-top:3px}.qr{width:84px;flex:none!important;border:0!important}.qr svg{width:84px;height:84px}
+ .ft{background:#1737a0;color:#fff;text-align:center;font-style:italic;border-radius:0 0 12px 12px;padding:5px;margin-top:10px;font-size:17px}</style></head><body>
+ <div class="top">${cfg.logo?`<img src="${cfg.logo}">`:''}<div><b>${esc(cfg.shop_name||cfg.company)}</b><small>${esc(cfg.shop_address)}</small></div></div>
+ <div class="title">WEIGHBRIDGE TICKET</div>
+ <div class="meta"><div><div class="tn">Ticket No : ${esc(t.ticket_no)}</div></div><div class="dt">Date : ${dd(t.first_ts)}<br>Time : ${tt(t.first_ts)}</div></div>
+ ${row('Customer',t.customer)}${row('Driver',t.driver)}${row('Vehicle No',t.vehicle)}${row('Trailer No',t.trailer)}${row('Product',t.product)}${row('Destination',t.destination)}
+ <div class="h">WEIGHING DETAILS</div>
+ <table><tr><th>Description</th><th>Time</th><th>Weight (kg)</th></tr><tr><td>${r1[0]}</td><td>${r1[1]}</td><td>${k(r1[2])}</td></tr><tr><td>${r2[0]}</td><td>${r2[1]}</td><td>${t.second_kg!=null?k(r2[2]):''}</td></tr></table>
+ <div class="net"><div><b>NET WEIGHT</b></div><div class="v"><b>${t.net_kg!=null?k(t.net_kg):'—'}</b><br>${t.net_kg!=null?'('+(t.net_kg/1000).toFixed(2)+' Tonnes)':''}</div></div>
+ <div style="margin-top:8px">${row('Weighing Mode',t.wmode||'')}${row('Indicator',t.indicator)}${row('Operator',t.operator)}${row('Remarks',t.remarks)}</div>
+ <div class="sig"><div>Weighbridge Operator<br><br>Signature</div><div>Customer / Driver<br><br>Signature</div><div class="qr">${t.qr||''}<small style="font-size:9px">${t.verify?'Verify: '+t.verify:''}</small></div></div>
+ <div class="ft">Thank you for your business!</div></body></html>`}
+// ---------- products / stock ----------
+function editProd(id){editId=id;const p=products.find(x=>x.id==id)||{plu:'',barcode:'',name:'',unit_type:'kg',price:''};$('#pTitle').textContent=id?'Edit product':'Add product';$('#pPlu').value=p.plu;$('#pBar').value=p.barcode||'';$('#pName').value=p.name;$('#pType').value=p.unit_type;$('#pPrice').value=p.price}
+async function saveProd(){const r=await api('/api/product',{id:editId,plu:$('#pPlu').value,barcode:$('#pBar').value,name:$('#pName').value,unit_type:$('#pType').value,price:$('#pPrice').value});if(r.error)return toast(/UNIQUE/.test(r.error)?'That PLU or barcode is already used':r.error);toast('Saved');editProd(null);loadProducts()}
+async function delProd(){if(editId&&await yes('Remove this product?')){await api('/api/product/delete',{id:editId});editProd(null);loadProducts()}}
 async function loadStock(){const d=$('#sDay');if(!d.value)d.value=today();const r=await api('/api/stock?day='+d.value);
- $('#stb').innerHTML=r.map(x=>`<tr><td>${esc(x.name)}</td><td><input id="so${x.id}" type="number" step="any" value="${x.opening}" style="width:110px"></td><td><input id="sr${x.id}" type="number" step="any" value="${x.received}" style="width:110px"></td><td class="r">${x.sold.toFixed(3)}</td><td class="r"><b>${x.expected.toFixed(3)}</b></td><td><button onclick="saveStock(${x.id})">Save</button></td></tr>`).join('')||'<tr><td colspan=6 class="mut">Add per-kg products first</td></tr>'}
+ $('#stb').innerHTML=r.map(x=>`<tr><td>${esc(x.name)}</td><td><input id="so${x.id}" type="number" step="any" value="${x.opening}" style="width:110px"></td><td><input id="sr${x.id}" type="number" step="any" value="${x.received}" style="width:110px"></td><td class="r">${fw(x.sold)}</td><td class="r"><b>${fw(x.expected)}</b></td><td><button onclick="saveStock(${x.id})">Save</button></td></tr>`).join('')||'<tr><td colspan="6" class="mut">Add per-kg products first</td></tr>'}
 async function saveStock(id){await api('/api/stock',{product_id:id,day:$('#sDay').value,opening:$('#so'+id).value,received:$('#sr'+id).value});toast('Stock saved');loadStock()}
-// ---- reports ----
-async function loadReport(){const f=$('#rFrom'),t=$('#rTo');if(!f.value)f.value=t.value=today();const r=await api(`/api/report?from=${f.value}&to=${t.value}`),z=r.report.totals;
- $('#csv').href=`/api/export.csv?from=${f.value}&to=${t.value}`;
- $('#stats').innerHTML=[['Revenue','KES '+money(z.total)],['Sales',z.n],['Cash','KES '+money(z.cash)],['M-Pesa','KES '+money(z.mpesa)],['Credit','KES '+money(z.credit)]].map(([a,b])=>`<div class="stat"><span class="mut">${a}</span><b>${b}</b></div>`).join('');
- $('#rprod').innerHTML='<tr><th>Product</th><th class="r">Qty</th><th class="r">Revenue</th></tr>'+r.report.products.map(p=>`<tr><td>${esc(p.name)}</td><td class="r">${p.unit_type=='kg'?p.qty.toFixed(3)+' kg':p.qty}</td><td class="r">${money(p.revenue)}</td></tr>`).join('');
- $('#ratt').innerHTML=r.report.attendants.map(a=>`<tr><td>${esc(a.username||'Shop')}</td><td class="r">${a.n} sales</td><td class="r">${money(a.total)}</td></tr>`).join('');
- $('#rsales').innerHTML='<tr><th>#</th><th>Time</th><th class="r">Total</th><th></th></tr>'+r.sales.map(s=>`<tr style="${s.voided?'opacity:.45;text-decoration:line-through':''}"><td>${s.id}</td><td>${s.ts.slice(5,16)}</td><td class="r">${money(s.total)}</td><td class="r"><button onclick="viewRcpt(${s.id})">Receipt</button>${s.voided?'':` <button class="dng" onclick="voidSale(${s.id})">Void</button>`}</td></tr>`).join('')}
+// ---------- reports ----------
+async function loadReport(){const f=$('#rFrom'),t=$('#rTo');if(!f.value)f.value=t.value=today();const q=`from=${f.value}&to=${t.value}`;$('#repR').hidden=!hasR();$('#repW').hidden=!hasW();$('#csv').hidden=!hasR();$('#csvT').hidden=!hasW();$('#csv').href='/api/export.csv?'+q;$('#csvT').href='/api/tickets.csv?'+q;
+ if(hasR()){const r=await api('/api/report?'+q),z=r.report.totals;
+  $('#stats').innerHTML=[['Revenue','KES '+money(z.total)],['Sales',z.n],['Cash','KES '+money(z.cash)],['M-Pesa','KES '+money(z.mpesa)],['Credit','KES '+money(z.credit)]].map(([a,b])=>`<div class="stat"><span class="mut">${a}</span><b>${b}</b></div>`).join('');
+  $('#rprod').innerHTML='<tr><th>Product</th><th class="r">Qty</th><th class="r">Revenue</th></tr>'+r.report.products.map(p=>`<tr><td>${esc(p.name)}</td><td class="r">${p.unit_type=='kg'?fw(p.qty):p.qty}</td><td class="r">${money(p.revenue)}</td></tr>`).join('');
+  $('#ratt').innerHTML=r.report.attendants.map(a=>`<tr><td>${esc(a.username||'—')}</td><td class="r">${a.n} sales</td><td class="r">${money(a.total)}</td></tr>`).join('');
+  $('#rsales').innerHTML='<tr><th>#</th><th>Time</th><th class="r">Total</th><th></th></tr>'+r.sales.map(s=>`<tr style="${s.voided?'opacity:.45;text-decoration:line-through':''}"><td>${s.id}</td><td>${s.ts.slice(5,16)}</td><td class="r">${money(s.total)}</td><td class="r"><button onclick="viewRcpt(${s.id})">Receipt</button>${s.voided?'':` <button class="dng" onclick="voidSale(${s.id})">Void</button>`}</td></tr>`).join('')}
+ if(hasW()){const r=await api('/api/tickets/report?'+q);$('#wstats').innerHTML=[['Tickets completed',r.totals.n],['Total net weight',(r.totals.net/1000).toLocaleString('en-US',{maximumFractionDigits:2})+' t'],['',fw(r.totals.net)]].map(([a,b])=>`<div class="stat"><span class="mut">${a}</span><b>${b}</b></div>`).join('');
+  $('#wprod').innerHTML='<tr><th>Product</th><th class="r">Trips</th><th class="r">Net</th></tr>'+r.by_product.map(p=>`<tr><td>${esc(p.product)}</td><td class="r">${p.n}</td><td class="r">${fw(p.net)}</td></tr>`).join('');
+  $('#wtix').innerHTML='<tr><th>Ticket</th><th>Vehicle</th><th class="r">Net</th><th></th></tr>'+r.tickets.map(t=>`<tr style="${t.status==='void'?'opacity:.45;text-decoration:line-through':''}"><td>${esc(t.ticket_no)}</td><td>${esc(t.vehicle)}</td><td class="r">${t.net_kg!=null?fw(t.net_kg):'open'}</td><td class="r">${t.status==='done'?`<button onclick="showTicket(${t.id})">View</button> <button class="dng" onclick="voidTicket(${t.id})">Void</button>`:''}</td></tr>`).join('')}}
 async function viewRcpt(id){lastSale=id;$('#rcpH').textContent='Sale #'+id;$('#rcpT').textContent=(await api('/api/receipt?id='+id)).text;$('#rcpD').showModal()}
-async function voidSale(id){if(confirm('Void sale #'+id+'? It will be removed from totals and stock.')){await api('/api/void',{id});loadReport()}}
-// ---- scale & settings ----
-async function loadScale(){const [p,s]=await Promise.all([api('/api/ports'),api('/api/settings')]);
+async function voidSale(id){if(await yes('Void sale #'+id+'? It leaves the totals and stock.')){await api('/api/void',{id});loadReport()}}
+async function voidTicket(id){if(await yes('Void this ticket?')){await api('/api/ticket/void',{id});loadReport()}}
+// ---------- settings ----------
+async function loadSettings(){const s=await api('/api/settings',{}),u=await api('/api/users'),isA=me.role==='admin';
+ $('#sName').value=s.shop_name||'';$('#sAddr').value=s.shop_address||'';$('#sPrn').value=s.printer||'';$('#sWid').value=s.receipt_width;$('#sAuto').value=s.auto_print;
+ $('#utb').innerHTML=u.map(x=>`<tr><td>${esc(x.username)}</td><td>${x.role}</td><td class="r">${x.username===me.username?'<span class="mut">you</span>':`<button class="dng" onclick="delUser(${x.id})">Remove</button>`}</td></tr>`).join('');
+ $('#uRole').innerHTML=(isA?['operator','manager','admin']:['operator']).map(r=>`<option>${r}</option>`).join('');
+ if(!isA)return;const p=await api('/api/ports'),L=await api('/api/license');
+ $('#bMode').innerHTML=cfg.biz_modes.map(m=>`<option value="${m}">${BN[m]}</option>`).join('');$('#bMode').value=s.biz_mode;$('#bDec').value=s.decimals;$('#bUnit').value=s.display_unit;$('#bMan').value=s.allow_manual;
  $('#cPort').innerHTML='<option value="">(auto-detect)</option>'+p.ports.map(x=>`<option value="${esc(x.device)}">${esc(x.device)} – ${esc(x.desc)}</option>`).join('');$('#cPort').value=s.port;
- $('#cProf').innerHTML=p.profiles.map(x=>`<option>${esc(x)}</option>`).join('');$('#cProf').value=s.profile;$('#cBaud').value=s.baud;$('#cMode').value=s.mode;$('#cRx').value=s.custom_regex;
- $('#sName').value=s.shop_name;$('#sAddr').value=s.shop_address;$('#sPrn').value=s.printer;$('#sWid').value=s.receipt_width;$('#sAuto').value=s.auto_print}
-async function connect(){await api('/api/scale/connect',{port:$('#cPort').value,baud:$('#cBaud').value,profile:$('#cProf').value,mode:$('#cMode').value,custom_regex:$('#cRx').value});toast('Connecting…')}
-async function saveSettings(){await api('/api/settings',{shop_name:$('#sName').value,shop_address:$('#sAddr').value,printer:$('#sPrn').value,receipt_width:$('#sWid').value,auto_print:$('#sAuto').value});toast('Settings saved')}
-loadProducts();renderCart();poll();
+ $('#cProf').innerHTML=p.profiles.map(x=>`<option>${esc(x)}</option>`).join('');$('#cProf').value=s.profile;$('#cBaud').value=s.baud;$('#cMode').value=s.mode;$('#cRx').value=s.custom_regex;$('#cUnit').value=s.scale_unit;$('#cTol').value=s.stable_tol;
+ $('#tPre').value=s.ticket_prefix;$('#tInd').value=s.indicator;$('#tFirst').value=s.first_weigh;$('#tLogoP').src=s.logo||'';logoData=null;
+ $('#licI').innerHTML=`<div class="row"><label>Licensed to</label><b>${esc(L.company)}</b></div><div class="row"><label>Includes</label>${(L.modes||[]).join(' + ')}</div><div class="row"><label>Expires</label>${L.expires||'never'}</div><div class="row"><label>Computer ID</label><code>${esc(L.machine_id)}</code></div>`}
+async function sv(o,msg){const r=await api('/api/settings',o);if(r.error)return toast(r.error);await reloadCfg();go('settings');toast(msg||'Saved')}
+const saveBiz=()=>sv({biz_mode:$('#bMode').value,decimals:$('#bDec').value,display_unit:$('#bUnit').value,allow_manual:$('#bMan').value});
+const saveShop=()=>sv({shop_name:$('#sName').value,shop_address:$('#sAddr').value,printer:$('#sPrn').value,receipt_width:$('#sWid').value,auto_print:$('#sAuto').value});
+const saveWB=()=>sv({ticket_prefix:$('#tPre').value,indicator:$('#tInd').value,first_weigh:$('#tFirst').value,...(logoData?{logo:logoData}:{})});
+async function connect(){const r=await api('/api/scale/connect',{port:$('#cPort').value,baud:$('#cBaud').value,profile:$('#cProf').value,mode:$('#cMode').value,custom_regex:$('#cRx').value,scale_unit:$('#cUnit').value,stable_tol:$('#cTol').value});if(r.error)return toast(r.error);await reloadCfg();go('settings');toast('Connecting…')}
+$('#tLogoF').onchange=e=>{const f=e.target.files[0];if(!f)return;const im=new Image();im.onload=()=>{const s=Math.min(1,300/im.width),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);logoData=c.toDataURL('image/png');$('#tLogoP').src=logoData};im.src=URL.createObjectURL(f)};
+async function saveUser(){const r=await api('/api/user',{username:$('#uName').value,password:$('#uPass').value,role:$('#uRole').value});if(r.error)return toast(r.error);$('#uName').value=$('#uPass').value='';toast('User saved');loadSettings()}
+async function delUser(id){if(await yes('Remove this user?')){const r=await api('/api/user/delete',{id});if(r.error)toast(r.error);loadSettings()}}
+async function changeLic(){const r=await api('/api/license/change',{key:$('#licK').value});if(r.error)return toast(r.error);toast('Licence updated');loadSettings()}
+init();
 </script></body></html>
